@@ -31,3 +31,11 @@ def view_file(request,name):
     '''
     instance=get_object_or_404(File,name=name,user=request.user)
     return render(request,'files/view.html',{'instance':instance})
+
+def list_file(request):
+    '''
+    :param request:
+    :return:
+    '''
+    file_qs=File.objects.filter(user__username=request.user.username)
+    return render(request,'files/list.html',{'file_qs':file_qs})

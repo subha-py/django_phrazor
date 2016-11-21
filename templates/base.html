@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}Phrazor{% endblock %}</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Theme CSS -->
+    <!-- User created CSS -->
+    <link href="/static/css/sidebar.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="/static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet">
+    {% block extracss %}
+    {% endblock %}
+</head>
+<body>
+<div id="wrapper" class="toggled">
+    <!-- Sidebar -->
+    {% block sidebar %}
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href=".">
+                        Phrazor
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'files:list' %}">Files</a>
+                </li>
+                <li>
+                    <a href="#">Projects(to be done)</a>
+                </li>
+                <li>
+                    <a href="#">Tutorial(to be done)</a>
+                </li>
+                <li>
+                    <a href="#">Contact(to be done)</a>
+                </li>
+            </ul>
+        </div>
+    {% endblock sidebar %}
+    <!-- /#sidebar-wrapper -->
+
+
+    {#    body content of page#}
+    <div id="page-content-wrapper">
+        {% block navbar %}
+            <nav class = "navbar navbar-default" role = "navigation">
+
+                <div class = "navbar-header">
+                    <button type = "button" class = "navbar-toggle"
+                            data-toggle = "collapse" data-target = "#example-navbar-collapse">
+                        <span class = "sr-only">Toggle navigation</span>
+                        <span class = "icon-bar"></span>
+                        <span class = "icon-bar"></span>
+                        <span class = "icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand page-scroll" href="/">Phrazor</a>
+                </div>
+                <div class = "collapse navbar-collapse" id = "example-navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if request.user.is_authenticated %}
+                            {#                <li class="nav-link" ><a id="add_new_list" href="{% url 'lists:create' %}"><span class="glyphicon glyphicon-copy"></span> Create List</a></li>#}
+                            <li class="dropdown nav-link">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Your Account
+                                    <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a id="accounts_logout" href="/accounts/logout/">Logout</a></li>
+                                </ul>
+                            </li>
+
+                        {% else %}
+
+                            <li class="nav-link"><a id="accounts_signup" href="."><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                            <li class="nav-link"><a id="accounts_login" href="."><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        {% endblock navbar %}
+        <div class="container">
+        {% block content %}
+        {% endblock %}
+
+        <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+
+        {% block tail %}
+        {% endblock tail %}
+        </div>
+
+
+    </div>
+</div>
+{#end main content#}
+<!-- jQuery -->
+<script src="/static/vendor/jquery/jquery.min.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!-- Plugin JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<!-- Contact Form JavaScript -->
+<script src="/static/js/jqBootstrapValidation.js"></script>
+<!-- Theme JavaScript -->
+<script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+</script>
+
+{% block extrajs %}
+{% endblock %}
+
+
+</body>
+</html>

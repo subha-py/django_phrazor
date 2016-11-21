@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Phrazor</title>
-</head>
-<body>
-This is home page
-</body>
-</html>
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+    <h1 class="display-3">Welcome to phrazor.</h1>
+    <p class="lead">We help to make a bit more sense out of your data.</p>
+        <p>You may choose the add file option from the sidebar.</p>
+            <p class="lead">
+                We currently support (.csv) files only<br><br>
+            </p>
+{% endblock %}

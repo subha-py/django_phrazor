@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase,Client
+from django.test import TestCase
 
 
 from files.test_files.test_file_models import get_user_obj_by_name,get_test_file
