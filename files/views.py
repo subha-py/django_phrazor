@@ -17,8 +17,10 @@ def create_file(request):
     '''
     form=FileForm(request.POST or None,request.FILES or None)
     if form.is_valid():
-        instance=form.save(request.user)
-        return redirect(instance.get_absolute_url())
+        handle_uploaded_file(request.FILES['file'])
+        #instance=form.save(request.user)
+        #return redirect(instance.get_absolute_url())
+        return HttpResponse('check console')
     else:
         return render(request,'files/create.html',{'form':form})
 
@@ -35,7 +37,7 @@ def view_file(request,name):
 def list_file(request):
     '''
     :param request:
-    :return:
+    :return:a response
     '''
     file_qs=File.objects.filter(user__username=request.user.username)
     return render(request,'files/list.html',{'file_qs':file_qs})
