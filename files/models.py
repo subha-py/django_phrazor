@@ -15,7 +15,7 @@ class File(models.Model):
     '''
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='file')
     name=models.CharField(max_length=255)
-    desc=models.TextField()
+    desc=models.CharField(max_length=255)
     file=models.FileField(upload_to=file_directory_path)
     timestamp=models.DateTimeField(auto_now_add=True)
 

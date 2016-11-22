@@ -77,3 +77,46 @@ class ViewFileTest(TestCase):
         c.force_login(user_obj)
         response = c.get(reverse('files:view', kwargs={'name': file_obj.name}))
         self.assertEqual(response.context['instance'], file_obj)
+
+
+class ListFileTest(TestCase):
+
+    def test_uses_list_template(self):
+        user_obj = get_user_obj_by_name('Zlatan Ibrahimovic')
+        file_obj = File.objects.create(
+            name='test_bank_revenue.csv',
+            desc='Data of test banks revenue',
+            file=get_test_file(),
+            user=user_obj,
+        )
+        c = Client()
+        c.force_login(user_obj)
+        response = c.get(reverse('files:list'))
+        self.assertTemplateUsed(response, 'files/list.html')
+
+
+    def test_passes_correct_list_to_template(self):
+        user_obj = get_user_obj_by_name('Zlatan Ibrahimovic')
+        file_obj = File.objects.create(
+            name='test_bank_revenue1.csv',
+            desc='Data of test banks revenue',
+            file=get_test_file(),
+            user=user_obj,
+        )
+        file_obj = File.objects.create(
+            name='test_bank_revenue2.csv',
+            desc='Data of test banks revenue',
+            file=get_test_file(),
+            user=user_obj,
+        )
+        file_obj = File.objects.create(
+            name='test_bank_revenue3.csv',
+            desc='Data of test banks revenue',
+            file=get_test_file(),
+            user=user_obj,
+        )
+        file_qs=File.objects.filter(user__username=user_obj.username)
+        c = Client()
+        c.force_login(user_obj)
+        response = c.get(reverse('files:list'))
+        self.assertEqual(list(response.context['file_qs']),list(file_qs))

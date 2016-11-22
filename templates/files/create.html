@@ -1,13 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Phrazor</title>
-</head>
-<body>
-<form action="." method="post" enctype="multipart/form-data">{% csrf_token %}
-    {{ form }}
-    <button type="submit">submit</button>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-xs-5">
+
+            <form id="file_form" class="form" method="post" action="." enctype="multipart/form-data">{% csrf_token %}
+                {% bootstrap_form form %}
+                <button type="submit" class="btn btn-success" id="file_submit">
+                    {% bootstrap_icon "floppy-save" %} Submit
+                </button>
+            </form>
+        </div>
+    </div>
+
+{% endblock content %}
