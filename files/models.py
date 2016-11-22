@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.urlresolvers import reverse
-
+from django.contrib.postgres.fields import JSONField
 
 def file_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/username/filename
@@ -16,7 +16,7 @@ class File(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='file')
     name=models.CharField(max_length=255)
     desc=models.CharField(max_length=255)
-    file=models.FileField(upload_to=file_directory_path)
+    data=JSONField()
     timestamp=models.DateTimeField(auto_now_add=True)
 
 

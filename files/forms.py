@@ -35,7 +35,10 @@ class FileForm(forms.ModelForm):
         if not file.name.endswith('.csv'):
             raise forms.ValidationError('Only csv files are supported now')
 
+        
+
         return file
+
 
     def save(self, for_user):
         self.instance.user = for_user

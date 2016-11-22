@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -76,12 +77,28 @@ WSGI_APPLICATION = 'django_phrazor.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'django_phrazor_test',
+            'USER': 'vphrase',
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+            'HOST': 'localhost',
+            'PORT': '',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'django_phrazor',
+            'USER': 'vphrase',
+            'PASSWORD':os.environ.get('POSTGRES_PASSWORD'),
+            'HOST':'localhost',
+            'PORT':'',
+        }
+    }
 
 
 # Password validation
@@ -120,5 +137,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
+
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../static'))
+
+
+# Media Files (user profile images,)
+MEDIA_URL='/media/'
+MEDIA_ROOT= os.path.abspath(os.path.join(BASE_DIR, '../media'))
 
