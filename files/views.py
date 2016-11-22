@@ -1,3 +1,6 @@
+import csv
+import pprint
+
 from django.shortcuts import (
     render,
     HttpResponse,
@@ -5,8 +8,10 @@ from django.shortcuts import (
     redirect,
 )
 
+
 from files.forms import FileForm
 from files.models import File
+from files.utils import handle_uploaded_file
 
 
 # Create your views here.
@@ -17,7 +22,14 @@ def create_file(request):
     '''
     form=FileForm(request.POST or None,request.FILES or None)
     if form.is_valid():
-        handle_uploaded_file(request.FILES['file'])
+        name=form.cleaned_data.get('name')
+        filepath=handle_uploaded_file(request,name)
+
+        with open(filepath) as csvfile:
+            reader = csv.DictReader(csvfile, delimiter=',')
+            pprint.PrettyPrinter()
+            pprint.pprint(list(reader))
+
         #instance=form.save(request.user)
         #return redirect(instance.get_absolute_url())
         return HttpResponse('check console')
