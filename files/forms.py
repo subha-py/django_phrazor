@@ -37,7 +37,7 @@ class FileForm(forms.ModelForm):
         return file
 
 
-    def save(self, for_user):
+    def save(self, for_user,commit=True):
         self.instance.user = for_user
-        return super().save()
+        return super().save(commit=commit)
 

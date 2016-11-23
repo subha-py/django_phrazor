@@ -1,5 +1,7 @@
 import csv
 import pprint
+import os
+import pandas as pd
 
 from django.shortcuts import (
     render,
@@ -24,15 +26,20 @@ def create_file(request):
     if form.is_valid():
         name=form.cleaned_data.get('name')
         filepath=handle_uploaded_file(request,name)
-
         with open(filepath) as csvfile:
             reader = csv.DictReader(csvfile, delimiter=',')
-            pprint.PrettyPrinter()
-            pprint.pprint(list(reader))
+            reader=list(reader)
+        df=pd.read_csv(filepath)
+        print(df)
 
-        #instance=form.save(request.user)
-        #return redirect(instance.get_absolute_url())
-        return HttpResponse('check console')
+        os.remove(filepath)
+        instance=form.save(request.user,commit=False)
+        instance.data={
+            'content':reader
+        }
+        instance.data2=df
+        instance.save()
+        return HttpResponse(instance.data2)
     else:
         return render(request,'files/create.html',{'form':form})
 
