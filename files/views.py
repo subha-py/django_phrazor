@@ -1,7 +1,6 @@
-import csv
-import pprint
 import os
-import pandas as pd
+import pprint
+import csv
 
 from django.shortcuts import (
     render,
@@ -9,11 +8,10 @@ from django.shortcuts import (
     get_object_or_404,
     redirect,
 )
-
-
+from django.urls import reverse
 from files.forms import FileForm
 from files.models import File
-from files.utils import handle_uploaded_file
+from files.utils import create_collection,get_summary_of_collection
 
 
 # Create your views here.
@@ -24,22 +22,11 @@ def create_file(request):
     '''
     form=FileForm(request.POST or None,request.FILES or None)
     if form.is_valid():
-        name=form.cleaned_data.get('name')
-        filepath=handle_uploaded_file(request,name)
-        with open(filepath) as csvfile:
-            reader = csv.DictReader(csvfile, delimiter=',')
-            reader=list(reader)
-        df=pd.read_csv(filepath)
-        print(df)
-
-        os.remove(filepath)
-        instance=form.save(request.user,commit=False)
-        instance.data={
-            'content':reader
-        }
-        instance.data2=df
+        collection_name=create_collection(request,form)
+        instance=form.save(commit=False)
+        instance.collection=collection_name
         instance.save()
-        return HttpResponse(instance.data2)
+        return redirect(reverse('files:list'))
     else:
         return render(request,'files/create.html',{'form':form})
 
@@ -50,7 +37,8 @@ def view_file(request,name):
     :param name:
     :return:
     '''
-    instance=get_object_or_404(File,name=name,user=request.user)
+    #TODO : user and name will be unique, will query by them
+    instance=get_object_or_404(File,name=name)
     return render(request,'files/view.html',{'instance':instance})
 
 def list_file(request):
@@ -58,5 +46,11 @@ def list_file(request):
     :param request:
     :return:a response
     '''
-    file_qs=File.objects.filter(user__username=request.user.username)
-    return render(request,'files/list.html',{'file_qs':file_qs})
+    file_qs=File.objects.all()
+    collection_list=[]
+    for turn in file_qs:
+        collection_list.append(get_summary_of_collection(request,turn))
+    context={
+        'collection_list':collection_list
+    }
+    return render(request,'files/list.html',context)

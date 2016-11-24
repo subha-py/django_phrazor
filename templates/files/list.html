@@ -2,32 +2,44 @@
 
 
 {% block content %}
-        <h1 class="display-3">Welcome,to file menu</h1>
-        <p class="lead">Add or view files here.</p>
-        <p class="lead">
-            <br><br>
-            <a class="btn btn-primary" href="{% url 'files:create' %}">New file</a>
-        </p>
-        <div class="row">
-            {% if file_qs|length_is:"0" %}
-                <div id="no_file" class="row">
-                    <p>There is no file for you, please add one from <a href="{% url 'files:create' %}">here</a></p>
-                    {% else %}
-                    <table class="table table-responsive table-striped  table-hover table-bordered table-condensed">
-                        <thead>
+    <h1 class="display-3">Welcome,to file menu</h1>
+    <p class="lead">Add or view files here.</p>
+    <p class="lead">
+        <br><br>
+        <a class="btn btn-primary" href="{% url 'files:create' %}">New file</a>
+    </p>
+    <div class="row">
+        {% if file_qs|length_is:"0" %}
+            <div id="no_file" class="row">
+                <p>There is no file for you, please add one from <a href="{% url 'files:create' %}">here</a></p>
+                {% else %}
+                <table class="table table-responsive table-striped  table-hover table-bordered table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Fields</th>
+                        <th>Rows Count</th>
+                        <th>Added On</th>
+                        <th>View_file</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for collection in collection_list %}
                         <tr>
-                            <th>Name</th>
+                            {% for turn in collection %}
+                                <td>
+                                    {% if forloop.last %}
+                                        <a href="{{ turn.get_absolute_url }}" class="btn btn-info">View Data</a>
+                                    {% else %}
+                                        {{ turn }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
                         </tr>
-                        </thead>
-                        <tbody>
-                        {% for instance in file_qs %}
-                            <tr>
-                                <td><a href="{% url 'files:view' instance.name %}">{{instance.name}}</a></td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% endif %}
-        </div>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

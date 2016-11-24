@@ -77,28 +77,18 @@ WSGI_APPLICATION = 'django_phrazor.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-if 'test' in sys.argv:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'django_phrazor_test',
-            'USER': 'vphrase',
-            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-            'HOST': 'localhost',
-            'PORT': '',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    'mongodb': {
+        'URL': 'localhost',
+        'PORT': 27017
+
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'django_phrazor',
-            'USER': 'vphrase',
-            'PASSWORD':os.environ.get('POSTGRES_PASSWORD'),
-            'HOST':'localhost',
-            'PORT':'',
-        }
-    }
+}
+
 
 
 # Password validation
