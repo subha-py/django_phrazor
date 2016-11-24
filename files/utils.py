@@ -90,8 +90,21 @@ def create_collection(request,form):
 
 def get_fields_from_collection(collection_obj):
     demo_data = collection_obj.find_one()
+    del demo_data['_id']
     field_list = list(demo_data.keys())
-    return field_list
+    demo_data=list(demo_data.values())
+    alist=[]
+    for index,value in enumerate(demo_data):
+        value=value.replace(' ', '')
+        value=value.replace('_','')
+        if value.isdigit():
+           alist.append((field_list[index],'integer'))
+        elif value.isalpha():
+            alist.append((field_list[index],'string'))
+        elif len(value.replace('.',''))<len(value) and (value.replace('.','').isdigit()):
+            alist.append((field_list[index],'float'))
+    print(alist)
+    return alist[:]
 
 def get_summary_of_collection(request,file_obj):
     '''
@@ -102,8 +115,6 @@ def get_summary_of_collection(request,file_obj):
     collection=get_collection(request,file_obj.collection)
     name=file_obj.collection
     field_list=get_fields_from_collection(collection)
-    field_list.remove('_id')
-    field_list_string=', '.join(field_list)[:100]+'...'
     count_of_collection=collection.count()
     timestamp=file_obj.timestamp
-    return [name,field_list_string,count_of_collection,timestamp,file_obj]
+    return [name,field_list,count_of_collection,timestamp,file_obj]
