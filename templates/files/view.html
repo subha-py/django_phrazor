@@ -1,11 +1,27 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 
+{% block extracss %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet" type="text/css">
+
+{% endblock extracss %}
+
 {% block content %}
 
     <div class="row">
-        <p>File edit</p>
-        <p>{{ instance.collection }}</p>
+        <table data-toggle="table">
+    <thead>
+        <tr>
+            <th>Item ID</th>
+            <th>Item Name</th>
+            <th>Item Price</th>
+        </tr>
+    </thead>
+    
+</table>
     </div>
 
 {% endblock content %}
+{% block extrajs %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.js"></script>
+{% endblock extrajs %}

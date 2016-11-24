@@ -4,6 +4,7 @@ from files.views import (
     create_file,
     view_file,
     list_file,
+    view_table,
 )
 
 
@@ -12,4 +13,5 @@ urlpatterns = [
     # url(r'^view/(?P<name>[\w-]+)/$', view_file, name='view'),
     url(r'^list/',list_file,name='list'),
     url(r'^(?P<name>[\w-]+)/view/$', view_file, name='view'),
+    url(r'^(?P<name>[\w-]+)/table/view/$', view_table, name='view_table')
 ]
