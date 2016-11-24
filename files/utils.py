@@ -88,6 +88,11 @@ def create_collection(request,form):
     return name
 
 
+def get_fields_from_collection(collection_obj):
+    demo_data = collection_obj.find_one()
+    field_list = list(demo_data.keys())
+    return field_list
+
 def get_summary_of_collection(request,file_obj):
     '''
     :param request: to get identify db as per user
@@ -96,8 +101,7 @@ def get_summary_of_collection(request,file_obj):
     '''
     collection=get_collection(request,file_obj.collection)
     name=file_obj.collection
-    demo_data=collection.find_one()
-    field_list=list(demo_data.keys())
+    field_list=get_fields_from_collection(collection)
     field_list.remove('_id')
     field_list_string=', '.join(field_list)[:100]+'...'
     count_of_collection=collection.count()

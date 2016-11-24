@@ -16,6 +16,7 @@ from files.utils import (
     create_collection,
     get_summary_of_collection,
     get_collection,
+    get_fields_from_collection,
 )
 
 # Create your views here.
@@ -44,7 +45,13 @@ def view_file(request,name):
     #TODO : user and name will be unique, will query by them
 
     instance=get_object_or_404(File,name=name)
-    return render(request,'files/view.html',{'instance':instance})
+    collection_obj=get_collection(request,instance.collection)
+    collection_fields=get_fields_from_collection(collection_obj)
+    context={
+        'instance':instance,
+        'collection_fields':collection_fields,
+    }
+    return render(request,'files/view.html',context)
 
 def list_file(request):
     '''
@@ -73,12 +80,12 @@ class JSONEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, o)
 
 
-def view_table(request,name):
+def view_table(request,collection_name):
     '''
     This function returns json response to fill table in files view
     :param request:
     :return:
     '''
-    collection_obj=get_collection(request,name)
+    collection_obj=get_collection(request,collection_name)
     document_list=JSONEncoder().encode(list(collection_obj.find()))
     return HttpResponse(document_list,content_type='application/json')
