@@ -4,7 +4,7 @@
 
 
 $( document ).on( "mousemove", function( event ) {
-    if (event.pageX <50) {
+    if (event.pageX <25) {
         $("#wrapper").removeClass('toggled');
     }
     if (event.pageX >200){

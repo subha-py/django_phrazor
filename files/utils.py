@@ -1,5 +1,8 @@
 import os
 import csv
+import random
+from itertools import islice
+import ast
 
 from django.conf import settings
 
@@ -42,10 +45,8 @@ def csv_to_json(request,form):
     '''
     name=form.cleaned_data.get('name')
     filepath = handle_uploaded_file(request, name)
-    with open(filepath) as csvfile:
-        reader = csv.DictReader(csvfile, delimiter=',')
-        document_list = list(reader)
-    os.remove(filepath)
+    field_names=getFieldnames(filepath)
+    document_list=writeCursor(filepath,field_names)
     return document_list
 
 ######################################################################
@@ -88,23 +89,17 @@ def create_collection(request,form):
     return name
 
 
-def get_fields_from_collection(collection_obj):
-    demo_data = collection_obj.find_one()
-    del demo_data['_id']
-    field_list = list(demo_data.keys())
-    demo_data=list(demo_data.values())
-    alist=[]
-    for index,value in enumerate(demo_data):
-        value=value.replace(' ', '')
-        value=value.replace('_','')
-        if value.isdigit():
-           alist.append((field_list[index],'integer'))
-        elif value.isalpha():
-            alist.append((field_list[index],'string'))
-        elif len(value.replace('.',''))<len(value) and (value.replace('.','').isdigit()):
-            alist.append((field_list[index],'float'))
-    print(alist)
-    return alist[:]
+def get_fields_and_data_from_collection(collection_obj):
+    #TODO: get samples of data and evaluate
+    document_set=collection_obj.find({},{'_id':False},limit=50)
+    demo_doc=document_set[0]
+    demo_fields=list(demo_doc.keys())
+    demo_values=list(demo_doc.values())
+    field_list=[]
+    for index,value in enumerate(demo_values):
+        field_list.append((demo_fields[index],type(value).__name__))
+    return field_list,document_set
+
 
 def get_summary_of_collection(request,file_obj):
     '''
@@ -114,7 +109,35 @@ def get_summary_of_collection(request,file_obj):
     '''
     collection=get_collection(request,file_obj.collection)
     name=file_obj.collection
-    field_list=get_fields_from_collection(collection)
+    field_list,x=get_fields_and_data_from_collection(collection)
     count_of_collection=collection.count()
     timestamp=file_obj.timestamp
     return [name,field_list,count_of_collection,timestamp,file_obj]
+
+
+def getFieldnames(csvFile):
+    """
+    Read the first row and store values in a tuple
+    """
+    with open(csvFile) as csvfile:
+        firstRow = csvfile.readlines(1)
+        fieldnames = tuple(firstRow[0].strip('\n').split(","))
+    return fieldnames
+
+def writeCursor(csvFile, fieldnames):
+    """
+    Convert csv rows into an array of dictionaries
+    All data types are automatically checked and converted
+    """
+    cursor = []  # Placeholder for the dictionaries/documents
+    with open(csvFile) as csvFile:
+        for row in islice(csvFile, 1, None):
+            values = list(row.strip('\n').split(","))
+            for i, value in enumerate(values):
+                try:
+                    nValue = ast.literal_eval(value)
+                except:
+                    nValue=value
+                values[i] = nValue
+            cursor.append(dict(zip(fieldnames, values)))
+    return cursor

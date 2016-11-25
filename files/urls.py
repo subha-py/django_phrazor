@@ -12,6 +12,5 @@ urlpatterns = [
     url(r'^create/',create_file,name='create'),
     # url(r'^view/(?P<name>[\w-]+)/$', view_file, name='view'),
     url(r'^list/',list_file,name='list'),
-    url(r'^(?P<name>[\w-]+)/view/$', view_file, name='view'),
-    url(r'^(?P<collection_name>[\w-]+)/table/view/$', view_table, name='view_table')
+    url(r'^(?P<name>[-\w.]+)/view/$', view_file, name='view'),
 ]

@@ -16,7 +16,7 @@ from files.utils import (
     create_collection,
     get_summary_of_collection,
     get_collection,
-    get_fields_from_collection,
+    get_fields_and_data_from_collection,
 )
 
 # Create your views here.
@@ -46,9 +46,10 @@ def view_file(request,name):
 
     instance=get_object_or_404(File,name=name)
     collection_obj=get_collection(request,instance.collection)
-    collection_fields=get_fields_from_collection(collection_obj)
+    collection_fields,document_list=get_fields_and_data_from_collection(collection_obj)
+    #print(collection_fields)
     context={
-        'instance':instance,
+        'document_list':document_list,
         'collection_fields':collection_fields,
     }
     return render(request,'files/view.html',context)
