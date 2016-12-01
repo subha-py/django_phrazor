@@ -88,6 +88,20 @@ def create_collection(request,form):
     collection.insert_many(document_list)
     return name
 
+def update_collection(request,form,pre_instance):
+    '''
+    :param request:
+    :param form:
+    :return:
+    '''
+    name=form.cleaned_data.get('name')
+    client=get_mongodb_client()
+    #todo : change database according to user
+    db=client.test_database
+    db.drop_collection(pre_instance.collection)
+    return create_collection(request,form)
+
+
 
 def get_fields_and_data_from_collection(collection_obj):
     #TODO: get samples of data and evaluate

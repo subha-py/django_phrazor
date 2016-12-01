@@ -84,8 +84,7 @@ DATABASES = {
     },
     'mongodb': {
         'URL': 'localhost',
-        'PORT': 27017
-
+        'PORT': 27017,
     }
 }
 

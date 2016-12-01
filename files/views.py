@@ -5,9 +5,7 @@ from django.shortcuts import (
     redirect,
 )
 from django.urls import reverse
-from django.http import JsonResponse
 
-from bson.json_util import dumps
 
 
 from files.forms import FileForm
@@ -17,6 +15,7 @@ from files.utils import (
     get_summary_of_collection,
     get_collection,
     get_fields_and_data_from_collection,
+    update_collection,
 )
 
 # Create your views here.
@@ -47,7 +46,6 @@ def view_file(request,name):
     instance=get_object_or_404(File,name=name)
     collection_obj=get_collection(request,instance.collection)
     collection_fields,document_list=get_fields_and_data_from_collection(collection_obj)
-    #print(collection_fields)
     context={
         'document_list':document_list,
         'collection_fields':collection_fields,
@@ -63,30 +61,27 @@ def list_file(request):
     collection_list=[]
     for turn in file_qs:
         collection_list.append(get_summary_of_collection(request,turn))
+    print(collection_list)
     context={
         'collection_list':collection_list
     }
     return render(request,'files/list.html',context)
 
-
-
-################# JSON returning functions #############################
-import json
-from bson import ObjectId
-
-class JSONEncoder(json.JSONEncoder):
-    def default(self, o):
-        if isinstance(o, ObjectId):
-            return str(o)
-        return json.JSONEncoder.default(self, o)
-
-
-def view_table(request,collection_name):
+def update_file(request,id):
     '''
-    This function returns json response to fill table in files view
     :param request:
     :return:
     '''
-    collection_obj=get_collection(request,collection_name)
-    document_list=JSONEncoder().encode(list(collection_obj.find()))
-    return HttpResponse(document_list,content_type='application/json')
+    instance = get_object_or_404(File, id=id)
+    form = FileForm(request.POST or None, request.FILES or None,instance=instance)
+    if form.is_valid():
+        collection_name = update_collection(request, form,pre_instance=instance)
+        instance = form.save(commit=False)
+        instance.collection = collection_name
+        instance.save()
+        return redirect(reverse('files:list'))
+    else:
+        return render(request, 'files/update.html', {'form': form})
+
+
+################# JSON returning functions #############################
