@@ -1,17 +1,21 @@
 from django.shortcuts import render,HttpResponse
 
 
-from reports.forms import ReportForm
+from reports.forms import DasboardForm
 # Create your views here.
-def create_reports(request):
+
+
+def create_report(request):
     '''
     :param request:
     :return:
     '''
-    form=ReportForm(request.POST)
+    form=DasboardForm(request.POST or None)
+
     if form.is_valid():
-        instance=form.save()
-        print(instance.name,instance.collection,'I am here')
-        return HttpResponse('Check console')
+        form.save()
     else:
-        return render(request,)
+        context={
+            'form':form,
+        }
+        return render(request,'dashboards/index.html',context)

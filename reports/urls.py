@@ -1,11 +1,10 @@
 from django.conf.urls import url
 
 from reports.views import (
-    create_reports,
+    create_report,
 )
 
 
 urlpatterns = [
-    url(r'^create/',create_reports,name='create'),
-
+    url(r'^create/',create_report,name='create'),
 ]

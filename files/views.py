@@ -76,7 +76,7 @@ def list_file(request):
         for turn in field_list:
             field_instance_list.append(Field.objects.create(
                 name=turn[0],
-                data_type=turn[1],
+                type=turn[1],
                 file=instance)
             )
         print(Field.objects.all())
@@ -84,8 +84,8 @@ def list_file(request):
 
     elif report_form.is_valid():
         instance=report_form.save()
-        print(instance.name,instance.collection)
-        return HttpResponse('check console')
+        print(instance.name,instance.file)
+        return redirect(reverse('reports:create'))
 
     else:
         file_qs=File.objects.all()
