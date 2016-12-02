@@ -26,3 +26,20 @@ class File(models.Model):
 
     def get_absolute_url(self):
         return reverse("files:view", kwargs={"name": self.name})
+
+
+class Field(models.Model):
+    '''
+    A field object
+    '''
+    DATA_TYPE_CHOICES=(
+        ('Integer','int'),
+        ('String','str')
+    )
+
+    name=models.CharField(max_length=255)
+    data_type=models.CharField(max_length=10,choices=DATA_TYPE_CHOICES,default='str')
+    file=models.ForeignKey(File,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{name}({field})'.format(name=self.name,field=self.data_type)

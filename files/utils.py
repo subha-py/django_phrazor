@@ -111,7 +111,10 @@ def get_fields_and_data_from_collection(collection_obj):
     demo_values=list(demo_doc.values())
     field_list=[]
     for index,value in enumerate(demo_values):
-        field_list.append((demo_fields[index],type(value).__name__))
+        field_type=type(value).__name__
+        if field_type=='float':
+            field_type='int'
+        field_list.append((demo_fields[index],field_type))
     return field_list,document_set
 
 

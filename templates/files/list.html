@@ -1,16 +1,25 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+
 {% block extracss %}
+    <link href="/static/css/base.css" rel="stylesheet">
 {% endblock extracss %}
+
+
 {% block content %}
     <h1 class="display-3">Welcome,to file menu</h1>
     <p class="lead">Add or view files here.</p>
-    <p class="lead">
-        <br><br>
-        <a class="btn btn-primary" href="{% url 'files:create' %}">New file</a>
-    </p>
+    <div class="row pull-right">
+        <!-- Trigger the modal with a button -->
+        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#report_create">{% bootstrap_icon "copy" %} New Report</button>
+    </div>
+
+    <br><hr>
     <div class="row">
         {% if collection_list|length_is:"0" %}
-            <p>There is no file for you, please add one from <a href="{% url 'files:create' %}">here</a></p>
+            <p>There is no file for you, please add one from here - <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#file_create">{% bootstrap_icon "plus" %}New File</button></p>
         {% else %}
             <table class="table table-responsive table-striped  table-hover table-bordered table-condensed">
                 <thead>
@@ -20,7 +29,7 @@
                     <th>Rows Count</th>
                     <th>Added On</th>
                     <th>View File</th>
-                    <th>Edit File</th>
+                    <th>Update File</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -30,10 +39,10 @@
                             <td>
                                 {% if forloop.last %}
 
-                                    <a href="{{ turn.get_absolute_url }}" class="btn btn-info">View Data</a>
+                                    <a href="{{ turn.get_absolute_url }}" class="btn btn-default btn-sm">{% bootstrap_icon 'eye-open' %} View Data</a>
                                     </td>
                                     <td>
-                                    <a href="{% url 'files:update' turn.id %}" class="btn btn-success">Update Data</a>
+                                    <a href="{% url 'files:update' turn.id %}" class="btn btn-warning btn-sm">{% bootstrap_icon 'ok' %} Update Data</a>
 
                                 {% elif forloop.counter == 2 %}
                                     {% for field in turn %}
@@ -52,14 +61,61 @@
                                 {% else %}
                                     {{ turn }}
                                 {% endif %}
-                            </td>
+                                </td>
                         {% endfor %}
                     </tr>
                 {% endfor %}
                 </tbody>
+
             </table>
+            <button style="margin-top: -20px" type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#file_create">{% bootstrap_icon "plus" %} New File</button>
 
         {% endif %}
 
     </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="report_create" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Create your report</h4>
+                </div>
+                <div class="modal-body">
+                    <p>{% include 'reports/create.html' %}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="file_create" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Create your File</h4>
+                </div>
+                <div class="modal-body">
+                    <p>{% include 'files/create.html' %}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

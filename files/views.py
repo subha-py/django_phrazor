@@ -9,7 +9,7 @@ from django.urls import reverse
 
 
 from files.forms import FileForm
-from files.models import File
+from files.models import File,Field
 from files.utils import (
     create_collection,
     get_summary_of_collection,
@@ -17,6 +17,10 @@ from files.utils import (
     get_fields_and_data_from_collection,
     update_collection,
 )
+
+
+from reports.forms import ReportForm
+
 
 # Create your views here.
 def create_file(request):
@@ -57,15 +61,43 @@ def list_file(request):
     :param request:
     :return:a response
     '''
-    file_qs=File.objects.all()
-    collection_list=[]
-    for turn in file_qs:
-        collection_list.append(get_summary_of_collection(request,turn))
-    print(collection_list)
-    context={
-        'collection_list':collection_list
-    }
-    return render(request,'files/list.html',context)
+
+    report_form=ReportForm(request.POST or None)
+    file_form = FileForm(request.POST or None, request.FILES or None)
+
+    if file_form.is_valid():
+        collection_name = create_collection(request, file_form)
+        instance = file_form.save(commit=False)
+        instance.collection = collection_name
+        instance.save()
+        collection_obj=get_collection(request,collection_name)
+        field_list,_=get_fields_and_data_from_collection(collection_obj)
+        field_instance_list=[]
+        for turn in field_list:
+            field_instance_list.append(Field.objects.create(
+                name=turn[0],
+                data_type=turn[1],
+                file=instance)
+            )
+        print(Field.objects.all())
+        return redirect(reverse('files:list'))
+
+    elif report_form.is_valid():
+        instance=report_form.save()
+        print(instance.name,instance.collection)
+        return HttpResponse('check console')
+
+    else:
+        file_qs=File.objects.all()
+        collection_list=[]
+        for turn in file_qs:
+            collection_list.append(get_summary_of_collection(request,turn))
+        context={
+            'collection_list':collection_list,
+            'file_form':file_form,
+            'report_form':report_form,
+        }
+        return render(request,'files/list.html',context)
 
 def update_file(request,id):
     '''

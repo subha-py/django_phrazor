@@ -1,0 +1,13 @@
+{% load bootstrap3 %}
+
+
+<div class="row">
+    <div class="col-xs-5">
+        <form method="post" action="." >{% csrf_token %}
+                {% bootstrap_form report_form %}
+                <button type="submit" class="btn btn-success" id="file_submit">
+                    {% bootstrap_icon "floppy-save" %} Submit
+                </button>
+            </form>
+        </div>
+    </div>
