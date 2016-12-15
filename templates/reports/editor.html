@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div id="editor">
+        <editor :field_qs="field_qs" :document_set="document_set">
+
+        </editor>
+
+
+        <template id="editor-template">
+            <div class="row">
+                <div class="col-md-6 pull-left">
+                    <button id="insert" class="btn btn-success">Insert</button>
+                    <button class="btn btn-warning">Branch</button>
+                    <button class="btn btn-default">Synonyms</button>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="form-control" style="height: 300px" contenteditable="true" class="col-md-12">
+                    Start typing here...
+                </div>
+            </div>
+
+
+        </template>
+    <pre>
+        [[ $data|json ]]
+    </pre>
+    </div>
+{% endblock content %}
+
+{% block extrajs %}
+
+    <script>
+        Vue.config.delimiters = ['[[', ']]'];
+
+
+        Vue.component('editor',{
+            template: '#editor-template',
+            props:['field_qs','document_set']
+
+        });
+        new Vue({
+            el:'#editor',
+            data:{
+                field_qs:'field_qs go here',
+                document_set:'document goes here'
+            }
+
+        })
+    </script>
+{% endblock extrajs %}

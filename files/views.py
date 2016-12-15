@@ -20,7 +20,7 @@ from files.utils import (
 
 
 from reports.forms import ReportForm
-
+from reports.models import Narrative,Segment
 
 # Create your views here.
 def create_file(request):
@@ -84,8 +84,10 @@ def list_file(request):
 
     elif report_form.is_valid():
         instance=report_form.save()
+        narrative_instance=Narrative.objects.create(report=instance)
+        narrative_instance.segments.create(index=0)
         print(instance.name,instance.file)
-        return redirect(reverse('reports:create'))
+        return redirect(reverse('reports:editor',kwargs={'id':instance.id}))
 
     else:
         file_qs=File.objects.all()

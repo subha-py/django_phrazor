@@ -23,22 +23,22 @@ class ReportForm(forms.ModelForm):
     field_order = ('name','collection')
 
 
-
-class DasboardForm(forms.ModelForm):
-    class Meta:
-        model=Report
-        fields=['text']
-
-        labels={
-            'text':'Report Template'
-        }
-        widgets={
-            'text':forms.Textarea(attrs={
-                'placeholder':'Start typing here...',
-                'rows':'10',
-            })
-        }
-
-        error_messages={
-            'text':{'required':EMPTY_TEXT_ERROR}
-        }
+#
+# class DasboardForm(forms.ModelForm):
+#     class Meta:
+#         model=Report
+#         fields=['text']
+#
+#         labels={
+#             'text':'Report Template'
+#         }
+#         widgets={
+#             'text':forms.Textarea(attrs={
+#                 'placeholder':'Start typing here...',
+#                 'rows':'10',
+#             })
+#         }
+#
+#         error_messages={
+#             'text':{'required':EMPTY_TEXT_ERROR}
+#         }

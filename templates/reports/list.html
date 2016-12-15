@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+
+{% block extracss %}
+    <link href="/static/css/base.css" rel="stylesheet">
+{% endblock extracss %}
+
+
+{% block content %}
+    <h1 class="display-3">Welcome,to Reports menu</h1>
+    <p class="lead">Add or view Reports here.</p>
+    <div class="row pull-right">
+        <!-- Trigger the modal with a button -->
+        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#report_create">{% bootstrap_icon "copy" %} New Report</button>
+    </div>
+
+    <br><hr>
+    <div class="row">
+        {% if file_count == 0 %}
+            <p>There is no files for you, please add one from here - <a href="{% url 'files:list' %}"></a></p>
+        {% elif report_qs|length_is:"0" %}
+            <p>There is no report for you, please add one from here - <a href="{% url 'files:list' %}"></a></p>
+        {% else %}
+            <table class="table table-responsive table-striped  table-hover table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Added On</th>
+                    <th>Editor</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for report in report_qs %}
+                    <tr>
+                        <td>{{ report.name }}</td>
+                        <td>{{ report.timestamp }}</td>
+                        <td><a href="{% url 'reports:editor' report.id %}" class="btn btn-sm btn-warning">Go to Editor</a></td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+        {% endif %}
+
+    </div>
+
+
+
+
+{% endblock %}
